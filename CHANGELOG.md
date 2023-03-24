@@ -1,5 +1,113 @@
 # Changelog
 
+## [9.14.0](https://github.com/folke/lazy.nvim/compare/v9.13.1...v9.14.0) (2023-03-22)
+
+
+### Features
+
+* **ui:** added test to dimmed commits ([0e230ca](https://github.com/folke/lazy.nvim/commit/0e230caab9466ae352e9aaa6a4327ebd3e72302a))
+
+
+### Bug Fixes
+
+* **ui:** show full reason for Not-Loaded ([#683](https://github.com/folke/lazy.nvim/issues/683)) ([261c2d6](https://github.com/folke/lazy.nvim/commit/261c2d6f95f1e71480c0a573275bbe4fb2c705a2))
+
+## [9.13.1](https://github.com/folke/lazy.nvim/compare/v9.13.0...v9.13.1) (2023-03-20)
+
+
+### Bug Fixes
+
+* **cache:** fix loading libs on Darwin ([236f851](https://github.com/folke/lazy.nvim/commit/236f8517bae70516a3f89fe154e3e18294eb862a))
+* **health:** add `main` key ([#679](https://github.com/folke/lazy.nvim/issues/679)) ([e7622b7](https://github.com/folke/lazy.nvim/commit/e7622b78f6addaeb93debf43041235c16fc74a57))
+* **health:** allow overriding `1` ([959f8c3](https://github.com/folke/lazy.nvim/commit/959f8c36bc1744db2745b18135f2fb822b382cfb))
+
+## [9.13.0](https://github.com/folke/lazy.nvim/compare/v9.12.1...v9.13.0) (2023-03-17)
+
+
+### Features
+
+* **help:** allow disabling README magic ([#663](https://github.com/folke/lazy.nvim/issues/663)) ([e5759d2](https://github.com/folke/lazy.nvim/commit/e5759d202afe80aeb192e7eb02d28b74cc2d66eb))
+
+## [9.12.1](https://github.com/folke/lazy.nvim/compare/v9.12.0...v9.12.1) (2023-03-16)
+
+
+### Bug Fixes
+
+* **cmd:** properly deal with commands with nargs=? or nargs=1. Fixes [#659](https://github.com/folke/lazy.nvim/issues/659) ([efe36bd](https://github.com/folke/lazy.nvim/commit/efe36bdfda47256dbc223945a7f35eea52b1d736))
+
+## [9.12.0](https://github.com/folke/lazy.nvim/compare/v9.11.0...v9.12.0) (2023-03-15)
+
+
+### Features
+
+* **cache:** automatically reset topmods when a user changes a file for a path on the rtp ([5b7b8c5](https://github.com/folke/lazy.nvim/commit/5b7b8c51495de8ced973cc23f0a58cadd21de875))
+* **cache:** drop dependency on ffi ([810acc1](https://github.com/folke/lazy.nvim/commit/810acc1e86180403308e1cf650ed9fb0c5d27a44))
+* **cache:** remove any mentions of lazy. Move the cache to cache/luac instead of cache/lazy/luac ([49dda87](https://github.com/folke/lazy.nvim/commit/49dda8751e99aae2ae7073c6374bc1b8c38d0649))
+* **cache:** use `vim.cache` everywhere. poly-fill when needed ([ea1a044](https://github.com/folke/lazy.nvim/commit/ea1a044e3c819693565e0d73994587023b8e5e90))
+
+
+### Bug Fixes
+
+* **cache:** remove dependency on jit ([942c805](https://github.com/folke/lazy.nvim/commit/942c805b8427e3b4b9586e27702eeceacf967549))
+
+## [9.11.0](https://github.com/folke/lazy.nvim/compare/v9.10.3...v9.11.0) (2023-03-14)
+
+
+### Features
+
+* **plugin:** added config.defaults.cond. Fixes [#640](https://github.com/folke/lazy.nvim/issues/640) ([9afba38](https://github.com/folke/lazy.nvim/commit/9afba388facee5ce45d244c0e10ce650d42d9495))
+
+
+### Bug Fixes
+
+* **loader:** never load lua files from a plugin where cond=false. Show error instead ([10f5844](https://github.com/folke/lazy.nvim/commit/10f5844abf30eb9b180efece36639b6eecb33e86))
+
+## [9.10.3](https://github.com/folke/lazy.nvim/compare/v9.10.2...v9.10.3) (2023-03-13)
+
+
+### Bug Fixes
+
+* **cache:** path ([#645](https://github.com/folke/lazy.nvim/issues/645)) ([8d73b9b](https://github.com/folke/lazy.nvim/commit/8d73b9bccd1fef7a7d3f5cc990c79b2dafcd9a3a))
+
+## [9.10.2](https://github.com/folke/lazy.nvim/compare/v9.10.1...v9.10.2) (2023-03-07)
+
+
+### Bug Fixes
+
+* **git:** always set origin name when cloning ([#622](https://github.com/folke/lazy.nvim/issues/622)) ([53be2c0](https://github.com/folke/lazy.nvim/commit/53be2c0ee1848fee2a47b89d184ad02410d3c319))
+* **plugin:** properly pass is_list for recursively merging props ([355312e](https://github.com/folke/lazy.nvim/commit/355312eb514b58b79e93753d46b2612a21949aa4))
+
+## [9.10.1](https://github.com/folke/lazy.nvim/compare/v9.10.0...v9.10.1) (2023-03-04)
+
+
+### Bug Fixes
+
+* **process:** unset GIT_WORK_TREE ([c60f7ea](https://github.com/folke/lazy.nvim/commit/c60f7ea985c488192a38bb3ddf7705f958bd3674))
+
+## [9.10.0](https://github.com/folke/lazy.nvim/compare/v9.9.0...v9.10.0) (2023-03-02)
+
+
+### Features
+
+* **render:** dim housekeeping commits by default ([#612](https://github.com/folke/lazy.nvim/issues/612)) ([1f7ffec](https://github.com/folke/lazy.nvim/commit/1f7ffec177656ac806706097d23f288e3a5e0b51))
+
+## [9.9.0](https://github.com/folke/lazy.nvim/compare/v9.8.5...v9.9.0) (2023-02-28)
+
+
+### Features
+
+* **health:** check for paths on the rtp from plugged or packer ([9bd1c94](https://github.com/folke/lazy.nvim/commit/9bd1c946d6114affebb57dbe3e33741ded566559))
+
+
+### Bug Fixes
+
+* **cache:** add hack to work-around incorrect requires back. Not a fan of this. Fixes [#603](https://github.com/folke/lazy.nvim/issues/603) ([79f85e5](https://github.com/folke/lazy.nvim/commit/79f85e5fed3ea020b09720e273c8b626f699b19a))
+* **git:** honor clone.defaultRemoteName. Fixes [#602](https://github.com/folke/lazy.nvim/issues/602) ([5af9380](https://github.com/folke/lazy.nvim/commit/5af93806aaa33fd9e8b4a7a32e9f847a3ad64c2a))
+* **git:** properly deal with failed clones. Fixes [#571](https://github.com/folke/lazy.nvim/issues/571) ([7722378](https://github.com/folke/lazy.nvim/commit/77223786aaa91446649d0dbdc3eabc2e53f9de6d))
+* **health:** whitelist deactivate prop ([5694483](https://github.com/folke/lazy.nvim/commit/5694483e8782f4d9a01ea8822166998924df5f00))
+* **keys:** set nowait for lazy keymaps when needed. Fixes [#600](https://github.com/folke/lazy.nvim/issues/600) ([1657ae9](https://github.com/folke/lazy.nvim/commit/1657ae9b8c86d672517ac7f573eb180d3f5ecb79))
+* **ui:** always show diagnostics virtual text ([0f713b2](https://github.com/folke/lazy.nvim/commit/0f713b2958b8a2e624fa0e2615418bd6c8fb8e10))
+
 ## [9.8.5](https://github.com/folke/lazy.nvim/compare/v9.8.4...v9.8.5) (2023-02-20)
 
 

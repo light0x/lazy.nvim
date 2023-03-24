@@ -9,6 +9,9 @@ M.defaults = {
   defaults = {
     lazy = false, -- should plugins be lazy-loaded?
     version = nil,
+    -- default `cond` you can use to globally disable a lot of plugins
+    -- when running inside vscode for example
+    cond = nil, ---@type boolean|fun(self:LazyPlugin):boolean|nil
     -- version = "*", -- enable this to try installing the latest stable versions of plugins
   },
   -- leave nil when passing the spec as the first argument to setup()
@@ -22,7 +25,7 @@ M.defaults = {
     timeout = 120, -- kill processes that take more than 2 minutes
     url_format = "https://github.com/%s.git",
     -- lazy.nvim requires git >=2.19.0. If you really want to use lazy with an older version,
-    -- then set the below to false. This is should work, but is NOT supported and will
+    -- then set the below to false. This should work, but is NOT supported and will
     -- increase downloads a lot.
     filter = true,
   },
@@ -138,6 +141,7 @@ M.defaults = {
   -- so :help works even for plugins that don't have vim docs.
   -- when the readme opens with :help it will be correctly displayed as markdown
   readme = {
+    enabled = true,
     root = vim.fn.stdpath("state") .. "/lazy/readme",
     files = { "README.md", "lua/**/README.md" },
     -- only generate markdown helptags for plugins that dont have docs
@@ -147,7 +151,7 @@ M.defaults = {
   debug = false,
 }
 
-M.version = "9.8.5" -- x-release-please-version
+M.version = "9.14.0" -- x-release-please-version
 
 M.ns = vim.api.nvim_create_namespace("lazy")
 
@@ -180,13 +184,14 @@ function M.setup(opts)
   if type(M.options.spec) == "string" then
     M.options.spec = { import = M.options.spec }
   end
-  M.options.performance.cache = require("lazy.core.cache").config
   table.insert(M.options.install.colorscheme, "habamax")
 
   M.options.root = Util.norm(M.options.root)
   M.options.dev.path = Util.norm(M.options.dev.path)
   M.options.lockfile = Util.norm(M.options.lockfile)
   M.options.readme.root = Util.norm(M.options.readme.root)
+
+  vim.fn.mkdir(M.options.root, "p")
 
   if M.options.performance.reset_packpath then
     vim.go.packpath = vim.env.VIMRUNTIME

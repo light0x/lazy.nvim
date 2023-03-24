@@ -1,7 +1,6 @@
 local Config = require("lazy.core.config")
 local Util = require("lazy.core.util")
 local Handler = require("lazy.core.handler")
-local Cache = require("lazy.core.cache")
 
 ---@class LazyCorePlugin
 local M = {}
@@ -250,7 +249,6 @@ function Spec:import(spec)
     return
   end
 
-  Cache.indexed_unloaded = false
   self.modules[#self.modules + 1] = spec.import
 
   local imported = 0
@@ -308,13 +306,23 @@ function Spec:merge(old, new)
 end
 
 function M.update_state()
+  ---@type string[]
+  local cloning = {}
+
   ---@type table<string,FileType>
   local installed = {}
   Util.ls(Config.options.root, function(_, name, type)
     if type == "directory" and name ~= "readme" then
       installed[name] = type
+    elseif type == "file" and name:sub(-8) == ".cloning" then
+      name = name:sub(1, -9)
+      cloning[#cloning + 1] = name
     end
   end)
+
+  for _, failed in ipairs(cloning) do
+    installed[failed] = nil
+  end
 
   for _, plugin in pairs(Config.plugins) do
     plugin._ = plugin._ or {}
@@ -386,7 +394,6 @@ function M.load()
   Util.track("state")
   M.update_state()
   Util.track()
-  require("lazy.core.cache").indexed_unloaded = false
   M.loading = false
 end
 
@@ -424,7 +431,7 @@ end
 ---@param is_list? boolean
 function M.values(plugin, prop, is_list)
   ---@type table
-  local ret = plugin._.super and M.values(plugin._.super, prop) or {}
+  local ret = plugin._.super and M.values(plugin._.super, prop, is_list) or {}
   local values = rawget(plugin, prop)
 
   if not values then

@@ -1,8 +1,8 @@
 local Util = require("lazy.core.util")
 local Config = require("lazy.core.config")
 local Handler = require("lazy.core.handler")
-local Cache = require("lazy.core.cache")
 local Plugin = require("lazy.core.plugin")
+local Cache = require("lazy.core.cache")
 
 ---@class LazyCoreLoader
 local M = {}
@@ -266,8 +266,12 @@ function M._load(plugin, reason, opts)
     return Util.error("Plugin " .. plugin.name .. " is not installed")
   end
 
-  if plugin.cond ~= nil and not (opts and opts.force) then
-    if plugin.cond == false or (type(plugin.cond) == "function" and not plugin.cond()) then
+  local cond = plugin.cond
+  if cond == nil then
+    cond = Config.options.defaults.cond
+  end
+  if cond ~= nil and not (opts and opts.force) then
+    if cond == false or (type(cond) == "function" and not cond(plugin)) then
       plugin._.cond = false
       return
     end
@@ -342,7 +346,8 @@ function M.get_main(plugin)
   local normname = Util.normname(plugin.name)
   ---@type string[]
   local mods = {}
-  for modname, _ in pairs(Cache.lsmod(plugin.dir)) do
+  for _, mod in ipairs(Cache.find("*", { all = true, rtp = false, paths = { plugin.dir } })) do
+    local modname = mod.modname
     mods[#mods + 1] = modname
     local modnorm = Util.normname(modname)
     -- if we found an exact match, then use that
@@ -460,6 +465,9 @@ function M.auto_load(modname, modpath)
         error("Plugin " .. plugin.name .. " is not loaded and is configured with module=false")
       end
       M.load(plugin, { require = modname })
+      if plugin._.cond == false then
+        error("You're trying to load `" .. plugin.name .. "` for which `cond==false`")
+      end
     end
     return true
   end
@@ -469,17 +477,17 @@ end
 ---@param modname string
 function M.loader(modname)
   local paths = Util.get_unloaded_rtp(modname)
-  local modpath, hash = Cache._Cache.find(modname, { rtp = false, paths = paths })
-  -- print(modname .. " " .. paths[1])
-  if modpath then
-    M.auto_load(modname, modpath)
+  local ret = Cache.find(modname, { rtp = false, paths = paths })[1]
+  if ret then
+    M.auto_load(modname, ret.modpath)
     local mod = package.loaded[modname]
     if type(mod) == "table" then
       return function()
         return mod
       end
     end
-    return Cache.load(modpath, { hash = hash })
+    -- selene: allow(incorrect_standard_library_use)
+    return loadfile(ret.modpath, nil, nil, ret.stat)
   end
 end
 

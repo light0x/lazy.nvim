@@ -5,7 +5,6 @@ local Handler = require("lazy.core.handler")
 local Git = require("lazy.manage.git")
 local Plugin = require("lazy.core.plugin")
 local ViewConfig = require("lazy.view.config")
-local Cache = require("lazy.core.cache")
 
 local Text = require("lazy.view.text")
 
@@ -84,7 +83,7 @@ function M:update()
       diag.lnum = diag.row - 1
       return diag
     end, self._diagnostics),
-    { signs = false }
+    { signs = false, virtual_text = true }
   )
 end
 
@@ -402,9 +401,11 @@ function M:plugin(plugin)
     local reason = {}
     for handler in pairs(Handler.types) do
       if plugin[handler] then
+        local trigger = {}
         for _, value in ipairs(plugin[handler]) do
-          reason[handler] = value
+          table.insert(trigger, type(value) == 'table' and value[1] or value)
         end
+        reason[handler] = table.concat(trigger, ' ')
       end
     end
     for _, other in pairs(Config.plugins) do
@@ -456,15 +457,21 @@ function M:log(task)
         self:diagnostic({ message = "Breaking Changes", severity = vim.diagnostic.severity.WARN })
       end
       self:append(ref:sub(1, 7) .. " ", "LazyCommit", { indent = 6 })
-      self:append(vim.trim(msg)):highlight({
+
+      local dimmed = false
+      for _, dim in ipairs(ViewConfig.dimmed_commits) do
+        if msg:find("^" .. dim) then
+          dimmed = true
+        end
+      end
+      self:append(vim.trim(msg), dimmed and "LazyDimmed" or nil):highlight({
         ["#%d+"] = "LazyCommitIssue",
-        ["^%S+:"] = "LazyCommitType",
+        ["^%S+:"] = dimmed and "Bold" or "LazyCommitType",
         ["^%S+(%(.*%)):"] = "LazyCommitScope",
         ["`.-`"] = "@text.literal.markdown_inline",
         ["%*.-%*"] = "Italic",
         ["%*%*.-%*%*"] = "Bold",
       })
-      -- string.gsub
       self:append(" " .. time, "LazyComment")
       self:nl()
     end
@@ -670,7 +677,7 @@ function M:debug()
   end)
   self:nl()
 
-  Util.foreach(Cache.stats, function(name, stats)
+  Util.foreach(require("lazy.core.cache")._inspect(), function(name, stats)
     self:append(name, "LazyH2"):nl()
     local props = {
       { "total", stats.total or 0, "Number" },
